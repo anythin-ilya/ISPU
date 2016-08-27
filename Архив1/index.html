@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ИГЭУ САПР</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery-2.1.4.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/svg.min.js"></script>
+    <script src="js/svg.math.js"></script>
+</head>
+<body id="project">
+<div id="qq">
+</div>
+<div class="container-fluid" style="margin-top: 15px">
+    <!--<div class="row">-->
+        <!--<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">-->
+            <!--<div class="panel panel-default">-->
+                <!--<div class="panel-body">-->
+                    <!--Здесь могла бы быть ваша задача!-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1 row buttons" >
+
+        <div class="main-container-btn" style="width: 100%">
+            <button  class="btn btn-default" onclick="forDrawInMenu = false; obrabotka = 1;decision=true;settypeline('simpleline');currentAction();" style="width: 90%" title="Прямая"><img style="width: 90%"  src="images/Line.png" />
+            </button>
+            <div class="children-container-btn">
+                <!--Отрезок-->
+                <button class="btn btn-default" onclick="decision=true;settypeline('line');currentAction();forDrawInMenu = false; "style="width: 90%" title="Отрезок"><img style="width: 90%" src="images/Отрезок.png" />
+                </button>
+                <!--Окружность-->
+                <button class="btn btn-default" onclick="forDrawInMenu = false;decision=true;settypeline('horizontalLine');currentAction()" style="width: 90%" title="Горизонтальная прямая"><img style="width: 90%" src="images/Горизонтальная%20прямая.png"/></button>
+                <!--Дуга-->
+                <button class="btn btn-default" onclick="forDrawInMenu = false;decision=true;settypeline('verticalLine');currentAction()" style="width: 90%" title="Вертикальная прямая"><img style="width: 90%" src="images/Вертикальная%20прямая.png"/>
+                </button>
+                <button class="btn btn-default" onclick="forDrawInMenu = false;decision=true;settypeline('normal');currentAction();"style="width: 90%" title="Перпендикулярная прямая"><img style="width: 90%" src="images/Перпендикулярные%20прямые.png"/>
+                </button>
+                <button class="btn btn-default" onclick="forDrawInMenu = false;decision=true;settypeline('angle');currentAction();"style="width: 90%" title="Прямая под углом"><img style="width: 90%" src="images/Прямая%20под%20углом.png"/>
+                </button>
+                <button class="btn btn-default" onclick="forDrawInMenu = false;decision=true;settypeline('parallel');currentAction();" style="width: 90%" title="Параллельная прямая"><img style="width: 90%" src="images/Параллельные%20прямые.png"/>
+                </button>
+            </div>
+        </div>
+
+        <div class="main-container-btn">
+            <button class="btn btn-default" onclick="forDrawInMenu = false;decision=true;settypeline('circle');currentAction();"style="width: 90%" title="Окружность по двум точкам"><img style="width: 90%" src="images/Circle.png"/>
+            </button>
+            <div class="children-container-btn">
+                <!--Окружность по двум точкам-->
+                <button class="btn btn-default" onclick="forDrawInMenu = false;decision=true;settypeline('circleR');currentAction();" style="width: 90%" title="Окружность по радиусу"><img style="width: 90%" src="images/Окружность%20по%20радиусу.png"/>
+                </button>
+                <!--Окружность по радиусу-->
+            </div>
+        </div>
+        <!--Окружность-->
+        <button class="btn btn-default" onclick="forDrawInMenu = false;decision=true;settypeline('arc');currentAction();" style="width: 90%" title="Дуга"><img style="width: 90%" src="images/Arc.png"/></button>
+        <!--Дуга-->
+        <div class="main-container-btn">
+            <button class="btn btn-default" onclick="forDrawInMenu = false;decision=true;settypeline('visibleDot');currentAction();" style="width: 90%" title="Видимая точка"><img style="width: 90%" src="images/Point.png"/>
+            </button>
+            <div class="children-container-btn">
+                <button class="btn btn-default" onclick="forDrawInMenu = false;decision=true;settypeline('unvisibleDot');currentAction();" style="width: 90%" title="Невидимая точка"><img style="width: 90%" src="images/unvisiblePoint.png"/>
+                </button>
+            </div>
+        </div>
+        <!--Точка-->
+        <div class="main-container-btn">
+            <button class="btn btn-default" onclick="forDrawInMenu = false;decision=true;settypeline('angularSize');currentAction();" style="width: 90%" title="Размер под углом"><img style="width: 90%" src="images/Размер%20под%20углом.png"/>
+            </button>
+            <div class="children-container-btn">
+                <!--Отрезок-->
+                <button class="btn btn-default" onclick="forDrawInMenu = false;decision=true;settypeline('horizontalSize');currentAction();" style="width: 90%" title="Вертикальный размер"><img style="width: 90%" src="images/Вертикальный%20размер.png"/>
+                </button>
+                <!--Окружность-->
+                <!--Дуга-->
+                <button class="btn btn-default" onclick="forDrawInMenu = false;decision=true;settypeline('angleSize');currentAction();" style="width: 90%" title="Угловой размер"><img style="width: 90%" src="images/Угол.png"/>
+                </button>
+            </div>
+        </div>
+        <div class="main-container-btn">
+            <button class="btn btn-default" onclick="forDrawInMenu = false;decision=true;settypeline('splittingCircle');currentAction();" style="width: 90%" title="Линейка"><img style="width: 90%" src="images/Линейка.png"/>
+            </button>
+            <div class="children-container-btn">
+                <!--Окружность по двум точкам-->
+                <button class="btn btn-default" onclick="forDrawInMenu = false;decision=true;settypeline('delete');currentAction();" style="width: 90%" title="Ластик"><img style="width: 90%" src="images/Ластик.png"/>
+                </button>
+                <!--Окружность по радиусу-->
+            </div>
+        </div>
+        <button class="btn btn-default" onclick="forDrawInMenu = false;settypeline('Nothing');currentAction();" style="width: 90%" title="Nothing"><img style="width: 90%;" src="images/Nothing.png"/></button>
+        <button class="btn btn-default" onclick="forDrawInMenu = true; obrabotka = 0;settypeline('helpMenu');currentAction();drawingAdress.off('click', drawClickObject);
+        " style="width: 90%" title="Доп. меню"><img style="width: 90%;" src="images/Nothing.png"/></button>
+    </div>
+
+    <!--<div class="col-xs-11 col-sm-11 col-md-11 col-lg-11">-->
+        <!--<div class="row" style="padding-left: 5px">-->
+            <!--<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">-->
+                <!--<select class="form-control" onchange="setstyle(value)">-->
+                    <!--<option value='slim'> Тонкая</option>-->
+                    <!--<option value='dashed'>Штрих-пунктирная</option>-->
+                    <!--<option value='doted'> Пунктирная</option>-->
+                    <!--<option value='fat'> Толстая</option>-->
+                <!--</select>-->
+            <!--</div>-->
+            <!--<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">-->
+                <!--<select class="form-control" onchange="setcolor(value)">-->
+                    <!--<option value='black'>Чёрный</option>-->
+                    <!--<option value='red'>Красный</option>-->
+                    <!--<option value='blue'>Синий</option>-->
+                    <!--<option value='green'>Зелёный</option>-->
+                <!--</select>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+    <div class="row">
+        <div class="col-xs-7 col-sm-7 col-md-7 col-lg-7" style="padding-left: 20px">
+            <div id="drawing" style="border: 1px solid #000; cursor: crosshair;border-radius: 4px">
+
+            </div>
+        </div>
+        <div class="col-md-5 col-sm-5 col-md-5 col-lg-5 properties "style="padding: 10px 0;margin: 0px;border-radius: 4px">
+            <div>
+                <div class="col-md-12">
+                   <div class="col-md-6">
+                            Тип объекта
+                   </div>
+                    <div class="col-md-6">
+                        <div id="typeObj" style="float: right" >
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="col-md-6">
+                        Имя объекта
+                    </div>
+                    <div>
+                        <div class="col-md-6">
+                            <input onchange="drawSetting();"; type="text" class="form-control" id="nameObject"  placeholder="0" style="height: 20px; width: 76%;
+                                                                                                            margin-top: 2px;font-size: 10px;float: right">
+                            <!--<div id="nameObj" style="float: right"></div>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="row>">
+                        <div class="col-md-6">
+                            Тип линии
+                        </div>
+                        <div class="col-md-6">
+                            <select class="rightMenu" id="rightMenuType" onchange="setstyle(value); drawSetting();">
+                                <option  value='slim'>Тонкая</option>
+                                <option  value='dashed'>Штрих-пунктирная</option>
+                                <option  value='doted'>Штриховая</option>
+                                <option  value='fat'>Толстая</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="row>">
+                        <div class="col-md-6">
+                            Цвет
+                        </div>
+                        <div class="col-md-6">
+                            <select class="rightMenu" id="rightMenuColor" onchange="setcolor(value);drawSetting()">
+                                <option value='black'>Чёрный</option>
+                                <option value='red'>Красный</option>
+                                <option value='blue'>Синий</option>
+                                <option value='green'>Зелёный</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div id="lineSetting">
+                    <div class="col-md-12">
+                        <div class="col-md-4">
+                            Нач. точка
+                        </div>
+                        <div class="col-md-8">
+                            <div class="col-md-6" style="padding: 0 10px 0 0">
+                                <div class="col-md-1">
+                                    x
+                                </div>
+                                <input onchange="drawSetting();"; type="text" class="form-control" id="firstPointx"  placeholder="0" style="height: 20px; width: 60%;
+                                                                                                            margin-top: 2px;font-size: 10px;float: right">
+                            </div>
+                            <div class="col-md-6" style="padding: 0">
+                                <div class="col-md-1">
+                                    y
+                                </div>
+                                <input onchange="drawSetting();"; type="email" class="form-control" id="firstPointy"  placeholder="0" style="height: 20px; width: 60%;
+                                                                                                             margin-top: 2px;font-size: 10px;float: right">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-4">
+                            Кон. точка
+                        </div>
+                        <div class="col-md-8">
+                            <div class="col-md-6" style="padding: 0 10px 0 0">
+                                <div class="col-md-1">
+                                    x
+                                </div>
+                                <input onchange="drawSetting();"; type="text" class="form-control" id="secondPointx"  placeholder="0" style="height: 20px; width: 60%;
+                                                                                                             margin-top: 2px;font-size: 10px;float: right">
+                            </div>
+                            <div class="col-md-6" style="padding: 0">
+                                <div class="col-md-1">
+                                    y
+                                </div>
+                                <input onchange="drawSetting();"; type="email" class="form-control" id="secondPointy"  placeholder="0" style="height: 20px; width: 60%;
+                                                                                                             margin-top: 2px;font-size: 10px;float: right">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="circleSetting" >
+                    <div class="col-md-12">
+                        <div class="col-md-4">
+                            Центр окр.
+                        </div>
+                        <div class="col-md-8">
+                            <div class="col-md-6" style="padding: 0 10px 0 0">
+                                <div class="col-md-1">
+                                    x
+                                </div>
+                                <input onchange="drawSetting();"; type="email" class="form-control" id="circlePointx"  placeholder="0" style="height: 20px; width: 60%;
+                                                                                                             margin-top: 2px;font-size: 10px;float: right">
+                            </div>
+                            <div class="col-md-6" style="padding: 0">
+                                <div class="col-md-1">
+                                    y
+                                </div>
+                                <input onchange="drawSetting();"; type="email" class="form-control" id="circlePointy"  placeholder="0" style="height: 20px; width: 60%;
+                                                                                                             margin-top: 2px;font-size: 10px;float: right">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-4">
+                            Радиус
+                        </div>
+                        <div class="col-md-8">
+                            <div class="col-md-6" style="padding: 0 10px 0 0">
+                                <div class="col-md-1">
+                                    R
+                                </div>
+                                <input onchange="drawSetting();"; type="email" class="form-control" id="meaningR"  placeholder="0" style="height: 20px; width: 60%;
+                                                                                                             margin-top: 2px;font-size: 10px;float: right">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div id="pointSetting" style="display: none">
+                    <div class="col-md-12">
+                        <div class="col-md-4">
+                            Координаты
+                        </div>
+                        <div class="col-md-8">
+                            <div class="col-md-6" style="padding: 0 10px 0 0">
+                                <div class="col-md-1">
+                                    x
+                                </div>
+                                <input onchange="drawSetting();"; type="email" class="form-control" id="pointPointx"  placeholder="0" style="height: 20px; width: 60%;
+                                                                                                             margin-top: 2px;font-size: 10px;float: right">
+                            </div>
+                            <div class="col-md-6" style="padding: 0">
+                                <div class="col-md-1">
+                                    y
+                                </div>
+                                <input onchange="drawSetting();"; type="email" class="form-control" id="pointPointy"  placeholder="0" style="height: 20px; width: 60%;
+                                                                                                           margin-top: 2px;font-size: 10px;float: right">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-4">
+                            Видимость
+                        </div>
+                        <div class="col-md-8">
+                            <div class="col-md-6" style="padding: 0 89px 0 0">
+                                <input onchange="drawSetting();"; type="checkbox" class="form-control" id="visibleDot"  placeholder="0" style="height: 20px; width: 60%;
+                                                                                                            margin-top: 2px;font-size: 10px;float: right">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5 col-sm-5 col-md-5 col-lg-5 task" style="border-radius: 4px">
+            task
+        </div>
+
+        <div class="col-md-5 col-sm-5 col-md-5 col-lg-5" id="operation" style="border-radius: 4px"></div>
+        <div class="col-md-5 col-sm-5 col-md-5 col-lg-5" id="positionCursor" style="border-radius: 4px"></div>
+
+    </div>
+    <div class="col-md-5 col-sm-5 col-md-5 col-lg-5" id="status" style="border-radius: 4px"></div>
+
+</div>
+
+
+<!--<div class="col-md-12 col-md-offset-5"><font color="#fff">_</font>
+    <button class="btn btn-default" onclick="decision=false;connecting()" ><img src="images/Line.png"/></button>
+    <button class="btn btn-default" onclick="decision=false;settypeline('circle')"><img src="images/Circle.png"/> </button>
+    <button class="btn btn-default" onclick="decision=false;settypeline('arc')"><img src="images/Arc.png"/></button>
+    <button class="btn btn-default" onclick="decision=false;settypeline('dot')"><img src="images/Point.png"/> </button>
+
+</div>Вызов функции connecting, надо её вызвать на постоянной основе. -->
+
+
+</div>
+<div id="currentPosition"></div>
+    <!--<div id="info">-->
+        <!--<div id="write"></div>-->
+        <!--<div id="view"></div>-->
+    <!--</div>-->
+
+<div id="linear"></div>
+
+
+
+<!--        <div class="col-md-2">
+            <select class="form-control">
+                <option>1</option>
+                <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
+            </select>
+        </div>-->
+</div>
+
+
+<script src="js/script.js"></script>
+</body>
+</html>
+
+<!--
+var objects = [];
+rect = drawing.rect();
+
+objects[0].start.x;
+
+objects.push(
+    {
+        object: drawing.rect(sd383746576),
+        start: {x: first_point.x, y:first_point.y}
+        end: {x:posX, y:posY}
+    }
+);
+
+-->
