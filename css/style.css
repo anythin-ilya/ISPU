@@ -1,0 +1,89 @@
+#project .main-container-btn{
+    position: relative;
+}
+
+#project .children-container-btn{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: none;
+    top: 0;
+    left: 100%;
+    z-index: 120;
+
+}
+.container-fluid{
+    padding-top: 20px;
+    min-width: 1400px;
+}
+.hover .children-container-btn{
+    display: block !important;
+}
+#project .children-container-btn button{
+    display: inline-block;
+}
+#info{
+    border: 2px solid #3e8f3e;
+    font-size: 1.5em;
+    border-radius: 5px;
+    background: #ebcccc;
+    width: 370px;
+    margin-top: 5px;
+}
+
+body{
+    background-image: url(../images/fon.png);
+}
+
+#drawing{
+
+    background-color: white;
+
+}
+
+.properties{
+    width: 30%;
+    background-color: white;
+    border:1px solid  black;
+    font-size: 120%;
+    float: left;
+}
+.task{
+    margin-top: 5px;
+    width: 30%;
+    height: 365px;
+    background-color: white;
+    border:1px solid  black;
+    font-size: 120%;
+    float: left;
+}
+#operation, #positionCursor{
+    margin-top: 5px;
+    width: 30%;
+    height: 30px;
+    background-color: white;
+    border:1px solid  black;
+    font-size: 120%;
+    float: left;
+    text-align: right;
+}
+
+.linePoint{
+    display: none;
+}
+
+
+.rightMenu{
+    float: right;
+}
+
+select{
+    width: 130px;
+
+}
+
+#nameObj, #typeObj{
+    float: right;
+}
+
+
