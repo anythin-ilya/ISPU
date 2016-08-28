@@ -34,9 +34,9 @@ var forElastic;//для вспомогательгого объекта
 var b;
 var c;
 drawingAdress.on('mousemove', viewCoord);
-$.get("http://webtute.ru/editor.php?id=3", {},
+/*$.get("http://webtute.ru/editor.php?id=3", {},
     function (json) { alert(json);}
-);
+);*/
 
 
 //alert(tak);
