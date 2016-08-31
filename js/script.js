@@ -31,70 +31,9 @@ var control = false;
 var forDrawInMenu = false;
 var obrabotka = 0;
 var forElastic;//для вспомогательгого объекта
-var b;
-var c;
+var action = true;//показывает выбрана ли операция
+
 drawingAdress.on('mousemove', viewCoord);
-/*$.get("http://webtute.ru/editor.php?id=3", {},
-    function (json) { alert(json);}
-);*/
-
-
-//alert(tak);
-
-/*$.ajax({
-    type: "POST",
-    code:"qwerty",
-
-    url: "http://webtute.ru/editor.php?a=store&id=3"
-})*/
-
-/*var tak = {code:{a:2,b:1}};
-$.post("http://webtute.ru/editor.php?a=store&id=3", tak, function (json) { alert (json); },
-    'json');*/
-
-
-
-
-// javascript-код голосования из примера
-/*function vote() {
-
-    // (1) создать объект для запроса к серверу
-    var req = new XMLHttpRequest();
-
-    // (2)
-    // span рядом с кнопкой
-    // в нем будем отображать ход выполнения
-    var statusElem = document.getElementById('operation');
-    req.onreadystatechange = function() {
-        // onreadystatechange активируется при получении ответа сервера
-
-        if (req.readyState == 4) {
-            // если запрос закончил выполняться
-
-            statusElem.innerHTML = req.statusText // показать статус (Not Found, ОК..)
-
-            if(req.status == 200) {
-                // если статус 200 (ОК) - выдать ответ пользователю
-                alert("Ответ сервера: "+req.responseText);
-            }
-            // тут можно добавить else с обработкой ошибок запроса
-        }
-
-    }
-
-    // (3) задать адрес подключения
-    req.open('GET', 'http://webtute/editor.php?id=1', true);
-
-    // объект запроса подготовлен: указан адрес и создана функция onreadystatechange
-    // для обработки ответа сервера
-
-    // (4)
-    req.send(null);  // отослать запрос
-
-    // (5)
-    statusElem.innerHTML = 'Ожидаю ответа сервера...'
-}*/
-
 
 $(document).ready(function () {
     document.getElementById('circleSetting').setAttribute("style", "display: none");
@@ -104,8 +43,106 @@ $(document).ready(function () {
     viewCoord(e);
     currentAction();
 
+
 });
 
+function SaveOnServer(){
+    arrayForServer=[];//массив для отправки
+    i=0;
+    for(i = 0; i < object.length; i++) {
+        arrayForServer.push({//заполняем массив для отправки на сервер
+            name: object[i].name,//Хранит значение подписи объекта.
+            objectType:object[i].objectType,//Переменная, которая хранит тип объекта.
+            //"type": object[i].type,//Ссылка на невидимый кликабельный фон объекта.
+            x1: object[i].x1,//Координата X элемента "точка", координата Х для вертикальной прямой, первая выбранная точка линии, координата Х центра окружности.
+            y1: object[i].y1,//Координата Y для горизонтальной прямой, координата Y центра окружности.
+            x2: object[i].x2,//Координата X вертикальной прямой, вторая выбранная точка линии, координата Х левой точки привязки окруности.
+            y2: object[i].y2,//Координата Y горизонтальной прямой, координата Y левой точки привязки окружности.
+            x3: object[i].x3,//Координата Х верхней точки привязки окружности.
+            y3: object[i].y3,//Координата Y верхней точки привязки окружности.
+            x4: object[i].x4,//Координата Х правой точки привязки окружности.
+            y4: object[i].y4,//Координата Y правой точки привязки к окружности.
+            midX: object[i].midX,//Координата Х нижней точки привязки окружности, координата Х центра отрезка.
+            midY: object[i].midY,//Координата Y нижней точки привязки к окружности, координата Y центра отрезка.
+            tangentX: -1,
+            tangentY: -1,
+            R: object[i].R,//Радиус окружности.
+            A: object[i].A,//Коэффициент А общего уравнения прямой.
+            B: object[i].B,//Коэффициент В общего уравнения прямой.
+            C: object[i].C,//Коэффициент С общего уравнения прямой.
+            //"visibleObject": object[i].visibleObject,//Ссылка на видимый нарисованный объект.
+            //"text": object[i].text,//Ссылка на подпись объекта.
+            colorObj: object[i].color,
+            typeLineObj: object[i].typeLineObj})
+    }
+    for(i = 0; i < size.length; i++) {
+        arrayForServer.push({
+            //НУЖНО ДРУГОЙ ВАРИАНТ СОХРАНЕНИЯ РАЗМЕРОВ
+
+        })
+    }
+    var result = {code:JSON.stringify(arrayForServer)};//преобразуем данные в json структуру
+    $.post("http://webtute.ru/editor.php?a=store&id=3", result, function (json) { alert (json); },
+        'json');//заливаем эти данные на сервак
+
+
+}
+
+function LoadFromServer(){
+    $.get("http://webtute.ru/editor.php?id=3", {},
+        function (json) {alert(json.length)
+            for(i = 0; i < json.length; i++) {
+                alert(json[i].x1);
+                c = drawing.line(json[i].x1, json[i].y1, json[i].x2, json[i].y2).stroke({
+                    width: widthOfLine,//ДОПИСАТЬ
+                    color: json[i].color,
+                    dasharray: typeOfLine//ДОПИСАТЬ
+                });
+                a = drawing.line(json[i].x1, json[i].y1, json[i].x2, json[i].y2).stroke({
+                    width: 10,
+                    color: 'transparent'
+                });
+                var text1 = drawing.text(function (add) {
+                    add.tspan(json[i].name).fill(color).dx(1).dy(1);})
+
+                object.push({
+                    name: json[i].name,//Хранит значение подписи объекта.
+                    objectType:json[i].objectType,//Переменная, которая хранит тип объекта.
+                    type: a,//Ссылка на невидимый кликабельный фон объекта.
+                    x1: json[i].x1,//Координата X элемента "точка", координата Х для вертикальной прямой, первая выбранная точка линии, координата Х центра окружности.
+                    y1: json[i].y1,//Координата Y для горизонтальной прямой, координата Y центра окружности.
+                    x2: json[i].x2,//Координата X вертикальной прямой, вторая выбранная точка линии, координата Х левой точки привязки окруности.
+                    y2: json[i].y2,//Координата Y горизонтальной прямой, координата Y левой точки привязки окружности.
+                    x3: json[i].x3,//Координата Х верхней точки привязки окружности.
+                    y3: json[i].y3,//Координата Y верхней точки привязки окружности.
+                    x4: json[i].x4,//Координата Х правой точки привязки окружности.
+                    y4: json[i].y4,//Координата Y правой точки привязки к окружности.
+                    midX: json[i].midX,//Координата Х нижней точки привязки окружности, координата Х центра отрезка.
+                    midY: json[i].midY,//Координата Y нижней точки привязки к окружности, координата Y центра отрезка.
+                    tangentX: -1,
+                    tangentY: -1,
+                    R: json[i].R,//Радиус окружности.
+                    A: json[i].A,//Коэффициент А общего уравнения прямой.
+                    B: json[i].B,//Коэффициент В общего уравнения прямой.
+                    C: json[i].C,//Коэффициент С общего уравнения прямой.
+                    visibleObject: c,//Ссылка на видимый нарисованный объект.
+                    text: text1,//Ссылка на подпись объекта.
+                    //colorObj: json[i].color,
+                    typeLineObj: json[i].typeLineObj});
+
+                touchObject(i);
+                numberOfObjects++;
+
+            }
+
+
+        }
+    );
+    //alert(object[0].x1);
+
+
+
+}
 
 function transformFromMachineToUser(y){
     y=-1*y+drawingAdress.height();
@@ -118,7 +155,6 @@ function getCross(jObject, jObject2) {
     var cross={X:xCross,Y:yCross};
     return cross;
 }//Нахождение точки пересечения прямых. Возвращает Y в пользовательских координатах.
-
 
 function transformFromUserToMachine(y){
     y=(y-drawingAdress.height())/-1;
@@ -190,12 +226,15 @@ function drawSetting(){//функция изменения значений пр
     drawAll();
 }
 
-
 function currentAction(){
     document.getElementById('operation').innerHTML='Текущая операция = ' + typeline;
     if(!forDrawInMenu && (obrabotka == 0 || obrabotka ==1  )){
-        drawingAdress.on('click', drawClickObject);
-        obrabotka += 1;
+        obrabotka += 1;//хз зачем это
+        if(action){//если выбрана операция то клик по полю не навешиваем, а то будет 2 клика
+            drawingAdress.on('click', drawClickObject);
+            action = false;
+        }
+
     }
 }
 
@@ -273,6 +312,9 @@ function addTheElement(typeObj, name1, a, statx1, staty1, statx2, staty2, statx3
 }//ДОбавление элемента в массив объектов
 
 var drawClickObject = function (e) {//проверка на первый и второй клик по полю
+
+    console.log("drawClickObject")
+    console.log("PosX = " + posX + "PosY = " + posY + "FPx = " + first_point.x + "FPy = " + first_point.y);
     if (typeline != 'horizontalSize' && typeline != 'verticalSize' && typeline != 'angularSize' && typeline!= 'angleSize') {
         positionX = e.pageX - drawingAdress.offset().left;
         positionY = e.pageY - drawingAdress.offset().top;
@@ -280,6 +322,7 @@ var drawClickObject = function (e) {//проверка на первый и вт
         if (first_point.x && first_point.y) {//Елси уже было нажатие по 1 точке, то присваиваем значение, по которому кликнули второй точке
             posX = positionX;
             posY = positionY;
+            console.log("я в дравол пошел")
 
             //console.log('уходит в рисование по 2 точкам')
             drawAll();//Уходим в рисование объектов по 2м точкам.
@@ -290,7 +333,7 @@ var drawClickObject = function (e) {//проверка на первый и вт
             {
                 drawAll();
             }//Уходим в рисование объектов по 1 точке.
-            else if (typeline == "line" || typeline == "simpleline" || typeline == "circle"){//для этих объектов резинка
+            else if (typeline == "line" || typeline == "circle"){//для этих объектов резинка
                 drawingAdress.on('mousemove', elastic);//включаем резинку
             }
 
@@ -303,6 +346,7 @@ var drawClickObject = function (e) {//проверка на первый и вт
 }/*Обработчик клика по полю.*/
 
 function drawNormalSize(e) {
+    console.log("drawNormalSize")
     var a;//невидимая прямая
     var a1;//видимая прямая
     var vert1;//невидимая прямая
@@ -429,6 +473,7 @@ function drawNormalSize(e) {
 }//Рисуем обычные размеры
 
 function drawAngularSize(e){
+    console.log("drawAngularSize")
     var a;//невидимая прямая
     var a1;//видимая прямая
     var vert1;//невидимая прямая
@@ -501,6 +546,7 @@ function drawAngularSize(e){
 }//Рисуем наклонённые размеры
 
 function drawAngleSize(e){
+    console.log("drawAngleSize");
     var a;//невидимая прямая
     var a1;//видимая прямая
     var vert1;//невидимая прямая
@@ -710,9 +756,10 @@ function drawAngleSize(e){
 }//Угловой размер.
 
 var drawMmove = function (e) {
+    console.log("drawMmove")
     //по типу линии определяем какой размер рисовать
     if (typeline == 'horizontalSize') {
-       drawNormalSize(e);
+        drawNormalSize(e);
     }//Если выбранный размер - горизонтальный или вертикальный.
     if (typeline == 'angularSize') {
         drawAngularSize(e);
@@ -723,7 +770,7 @@ var drawMmove = function (e) {
 }//Функция рисования размеров.
 
 var drawClickSize = function (e) {
-
+    console.log("drawClickSize");
     drawingAdress.off('mousemove', drawMmove);//Отключает перерисовку при движении курсором.
     drawingAdress.off('click', drawClickSize);//Заканчивает рисование размера и фиксирует размерные линии.
     start = 0;
@@ -736,40 +783,42 @@ var drawClickSize = function (e) {
 }//Отвечает за установку окончательного местоположения размера.
 
 function touchObject(j) {
+    console.log("PosX = " + posX + "PosY = " + posY + "FPx = " + first_point.x + "FPy = " + first_point.y);
+    console.log("touchObject");
     //for (var j = 0; object[j]; j++) {
-        object[j].type.click(function () {
-            event.stopPropagation();
-            for (var i = 0; object[i]; i++)//Определяем объект в массиве, на который был совершён клик.
-                if (this == object[i].type) {
-                    k = i;//Сохраняем индекс объекта в массиве.
-                    if(firstUse==0)
-                    {
-                        jObject1=k;
-                        firstUse=1;
-                    }
-                    if(forDrawInMenu){
-                        //jObject2 = jObject;//Хранит предпоследний выбранный объект.
-                        //jObject = k;//Хранит последний выбранный объект.
-                        settings(k);//выводит параметры данного объекта на экран в формы
-                        return;
-                    }
-                    break;//находим нужный элемент и выходим из цикла
+    object[j].type.click(function () {
+        event.stopPropagation();
+        for (var i = 0; object[i]; i++)//Определяем объект в массиве, на который был совершён клик.
+            if (this == object[i].type) {
+                k = i;//Сохраняем индекс объекта в массиве.
+                if(firstUse==0)
+                {
+                    jObject1=k;
+                    firstUse=1;
                 }
-            jObject2 = jObject;//Хранит предпоследний выбранный объект.
-            jObject = k;//Хранит последний выбранный объект.
-            if(typeline=='normal' && (object[jObject].objectType!='visibleDot' && object[jObject].objectType!="unvisibleDot")) {//Возможность выбрать точку для рисования перпендикуляра
-                jObject2=jObject;
+                if(forDrawInMenu){
+                    //jObject2 = jObject;//Хранит предпоследний выбранный объект.
+                    //jObject = k;//Хранит последний выбранный объект.
+                    settings(k);//выводит параметры данного объекта на экран в формы
+                    return;
+                }
+                break;//находим нужный элемент и выходим из цикла
             }
-            if(typeline =='delete') {//Если пользователь хочет удалить какой-либо объект
-                typeDelete = "object";//тип удаляемого объекта
-                drawAll();
-                return;//Останавливаем выполнение подпрограммы.
-            }
-            if (typeline != 'angleSize')//Если мы хотим нарисовать что-то кроме углового размера.
-                chooseDotBig(k);//передаем в функцию для подсвечивания точек привязок, к - индекс объекта в массиве.
-            else if (jObject2 != -1)//Если мы хотим нарисовать угловой размер.
-                drawAll();
-        })
+        jObject2 = jObject;//Хранит предпоследний выбранный объект.
+        jObject = k;//Хранит последний выбранный объект.
+        if(typeline=='normal' && (object[jObject].objectType!='visibleDot' && object[jObject].objectType!="unvisibleDot")) {//Возможность выбрать точку для рисования перпендикуляра
+            jObject2=jObject;
+        }
+        if(typeline =='delete') {//Если пользователь хочет удалить какой-либо объект
+            typeDelete = "object";//тип удаляемого объекта
+            drawAll();
+            return;//Останавливаем выполнение подпрограммы.
+        }
+        if (typeline != 'angleSize')//Если мы хотим нарисовать что-то кроме углового размера.
+            chooseDotBig(k);//передаем в функцию для подсвечивания точек привязок, к - индекс объекта в массиве.
+        else if (jObject2 != -1)//Если мы хотим нарисовать угловой размер.
+            drawAll();
+    })
     object[j].text.mousedown(function () {
         event.stopPropagation();
         for (var i = 0; object[i]; i++)//Определяем объект в массиве, на который был совершён клик.
@@ -801,6 +850,7 @@ function touchObject(j) {
 }//Запускается каждый раз при создании объекта и вешает на каждый объект обработчик клика object[j].type.click
 
 function touchSize(j){
+    console.log("touchSize");
     size[j].line.click(function () {//клик на двухстороннюю линию
         event.stopPropagation();
         for (var i = 0; size[i]; i++)//Определяем объект в массиве, на который был совершён клик.
@@ -870,7 +920,7 @@ function touchSize(j){
 }
 
 function chooseDotBig(j) {//Передали номер в массиве object
-    console.log("заход в chooseto big для подсвечивания точек для привязки")
+    console.log("заход в chooseto big для подсвечивания точек для привязки chooseDotBig")
     var x5;
     var y5;
     r = 15;//чтобы много раз не считать радиус
@@ -1202,7 +1252,8 @@ function chooseDotBig(j) {//Передали номер в массиве object
     }
 }
 
-function connectToDot(x1, y1) {
+function connectToDot(x1, y1) {//обрабавтываеся первое и второе нажатие мыши
+    console.log("connectToDot");
     if (!first_point.x && !first_point.y) {//заходим сюда, когда первой точки нет
         console.log('Определяется 1 точка')
         first_point.x = x1;
@@ -1214,6 +1265,9 @@ function connectToDot(x1, y1) {
             console.log("Рисуем")//Рисуем элементы, которым достаточно 1 точки.
             drawAll();
         }
+        else if (typeline == "line" || typeline == "circle"){//для этих объектов резинка
+            drawingAdress.on('mousemove', elastic);//включаем резинку
+        }//резинка
     }
     else {//заходим сюда, когда точка первая есть
         console.log('Определяется 2 точка')
@@ -1239,6 +1293,7 @@ function deleteObject(){
 }
 
 function drawAll() {
+    console.log("drawAll")
     var xx;
     var yy;//вспомогательные переменные
     var A;
@@ -1409,7 +1464,7 @@ function drawAll() {
             touchObject(numberOfObjects);
             numberOfObjects++;//Номер последнего элемента массива объектов
         }
-            first_point = {};
+        first_point = {};
     }
     else if (typeline == 'horizontalLine' || typeline == 'verticalLine') {//Проверить
         var xx1;
@@ -1469,7 +1524,7 @@ function drawAll() {
             object[jObject].visibleObject = c;
         }
 
-            first_point = {};
+        first_point = {};
     }//Проверить как будут изменяться коэффициенты A, B, C после инвертироания осей.
     else if (typeline == 'line') {
         c = drawing.line(first_point.x, first_point.y, posX, posY).stroke({
@@ -1483,9 +1538,9 @@ function drawAll() {
         });
         console.log("fpX:  "+first_point.x+"   fpy:  "+first_point.y +"  posX:   "+posX+"  posY:   "+posY);
 
-        if(!forDrawInMenu) {
+        if(!forDrawInMenu) {//не для рисования в интерактивном меню
             var name;
-            name = prompt("Введите название прямой");
+            name = prompt("Введите название отрезка");
             A = transformFromMachineToUser(posY) - transformFromMachineToUser(first_point.y);
             B = -(posX - first_point.x);
             C = -A * first_point.x - B * transformFromMachineToUser(first_point.y);
@@ -1510,6 +1565,11 @@ function drawAll() {
             numberOfObjects++;
             jObject = -1;
             jObject2 = -1;
+            //node = document.getElementById("drawing").innerHTML;
+            //var tak = {code:object[1]};
+            //$.post("http://webtute.ru/editor.php?a=store&id=3", tak, function (json) { alert (json); },
+            //    'json');
+            //alert(node.innerHTML);
             drawingAdress.off('mousemove', elastic);//резинка
 
         }
@@ -1547,9 +1607,9 @@ function drawAll() {
                     .dy(dyy);
             })//.rotate(-SVG.math.deg(Math.atan(-A/B)));
             object[jObject].text = text1;
-
             touchObject(jObject);
         }
+        //alert();
         first_point={};
 
     }
@@ -1676,15 +1736,15 @@ function drawAll() {
             posX = 0;
             posY = yy;
         }
-            c = drawing.line(first_point.x, first_point.y, posX, posY).stroke({
-                width: widthOfLine,
-                color: color,
-                dasharray: typeOfHatch
-            });
-            a = drawing.line(first_point.x, first_point.y, posX, posY).stroke({
-                width: 10,
-                color: 'transparent',
-            })
+        c = drawing.line(first_point.x, first_point.y, posX, posY).stroke({
+            width: widthOfLine,
+            color: color,
+            dasharray: typeOfHatch
+        });
+        a = drawing.line(first_point.x, first_point.y, posX, posY).stroke({
+            width: 10,
+            color: 'transparent',
+        })
 
         if(!forDrawInMenu) {
             name = prompt("Введите название прямой");
@@ -1723,37 +1783,37 @@ function drawAll() {
         yy2 = (object[jObject2].B * (first_point.x - xx2)) / object[jObject2].A + first_point.y;
         var name;
         //console.log(object[jObject].x2+ "       " + object[jObject].y2 + "     " + object[jObject]);
-    c = drawing.line(xx1, yy1, xx2, yy2).stroke({
-        width: widthOfLine,
-        color: color,
-        dasharray: typeOfHatch
-    });
-    a = drawing.line(xx1, yy1, xx2, yy2).stroke({
-        width: 10,
-        color: 'transparent',
-    })
-
-    if (!forDrawInMenu) {
-
-        name = prompt("Введите название прямой");
-        A = transformFromMachineToUser(yy2) - transformFromMachineToUser(yy1);
-        B = -(xx2 - xx1);
-        C = -A * xx1 - B * transformFromMachineToUser(yy1);
-        text1 = drawing.text(function (add) {
-            //var dxx=()/A;
-            //console.log(dxx);
-            add.tspan(name).fill(color).dx(first_point.x-30)
-                .dy(first_point.y-30);
+        c = drawing.line(xx1, yy1, xx2, yy2).stroke({
+            width: widthOfLine,
+            color: color,
+            dasharray: typeOfHatch
         });
-        addTheElement('simpleline', name, a, xx1, yy1, xx2, yy2, -10, -10, -10, -10, -10, -10, -10, A, B, C, c, text1);
-        touchObject(numberOfObjects);
-        numberOfObjects++;//Индекс последнего объекта в массиве
-    }
-    else{
-        object[jObject].type = a;
-        object[jObject].visibleObject = c;
-    }
-    first_point = {};
+        a = drawing.line(xx1, yy1, xx2, yy2).stroke({
+            width: 10,
+            color: 'transparent',
+        })
+
+        if (!forDrawInMenu) {
+
+            name = prompt("Введите название прямой");
+            A = transformFromMachineToUser(yy2) - transformFromMachineToUser(yy1);
+            B = -(xx2 - xx1);
+            C = -A * xx1 - B * transformFromMachineToUser(yy1);
+            text1 = drawing.text(function (add) {
+                //var dxx=()/A;
+                //console.log(dxx);
+                add.tspan(name).fill(color).dx(first_point.x-30)
+                    .dy(first_point.y-30);
+            });
+            addTheElement('simpleline', name, a, xx1, yy1, xx2, yy2, -10, -10, -10, -10, -10, -10, -10, A, B, C, c, text1);
+            touchObject(numberOfObjects);
+            numberOfObjects++;//Индекс последнего объекта в массиве
+        }
+        else{
+            object[jObject].type = a;
+            object[jObject].visibleObject = c;
+        }
+        first_point = {};
         posX = 0;
 
     }//Допилить подпись
